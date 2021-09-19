@@ -1,0 +1,32 @@
+#logs and command responses
+
+# a configuration file 'version' is lower than the latest
+# placeholder: [filename] - name of file, including file extension
+oldFile: "&b[glide] old [filename] detected. Updating"
+
+# detected a bukkit world that isn't in the config file
+# placeholder: [worldName] - the world detected
+newWorld: "&b[glide] detected a new world '[worldName]'"
+
+updatingWorlds: "&b[glide] updating worlds configuration..."
+updatedWorlds: "&b[glide] updated worlds configuration!"
+
+# plugin reload text
+reloading: "&b[glide] reloading..."
+reloaded: "&b[glide] successfully reloaded."
+
+# plugin doesn't have the command the user requested
+# placeholder: [arg] - the argument attempted
+badArg: "&c[glide] invalid command argument [arg]"
+
+consoleCmdNotAllowed: "&cYou can't do this from console. Try adding a player argument."
+
+# user doesn't have permission for the command requested
+noPerms: "&eI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."
+
+#command descriptions
+glide: "&b/glide - teleport upwards and glide"
+help: "&b/glide help - see this"
+reload: "&b/glide reload - reload config files"
+
+version: 1.0

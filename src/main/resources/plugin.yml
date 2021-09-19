@@ -1,0 +1,38 @@
+name: Glide
+version: '${project.version}'
+main: io.github.dailystruggle.glide.Glide
+api-version: 1.13
+authors: [ leaf26 ]
+description: make a player glide until landing
+
+softdepend: [ PlaceholderAPI ]
+
+
+commands:
+  glide:
+    description: teleport upward and glide until you hit the ground
+    permission: glide.use
+
+permissions:
+  glide.*:
+    description: all glide perms
+    default: op
+    children:
+      glide.use: true
+      glide.use.other: true
+      glide.reload: true
+      glide.firework: true
+  glide.use:
+    description: allow player to use /glide
+    default: op
+  glide.use.other:
+    description: make other player glide
+    default: op
+    children:
+      glide.use: true
+  glide.reload:
+    description: reload the plugin configuration
+    default: op
+  glide.firework:
+    description: allow firework usage
+    default: op
