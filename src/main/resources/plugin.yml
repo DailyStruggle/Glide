@@ -22,6 +22,7 @@ permissions:
       glide.use.other: true
       glide.reload: true
       glide.firework: true
+      glide.invulnerable: true
   glide.use:
     description: allow player to use /glide
     default: op
@@ -35,4 +36,10 @@ permissions:
     default: op
   glide.firework:
     description: allow firework usage
+    default: op
+  glide.fall:
+    description: player glides after falling
+    default: false
+  glide.invulnerable:
+    description: player is invulnerable while gliding
     default: op
