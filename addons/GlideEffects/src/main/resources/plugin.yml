@@ -1,9 +1,0 @@
-name: GlideEffects
-version: '${project.version}'
-main: io.github.dailystruggle.glideeffects.GlideEffects
-api-version: 1.13
-authors: [ leaf26 ]
-description: add effects on glide event
-website: https://github.com/DailyStruggle
-
-depend: [ Glide ]
