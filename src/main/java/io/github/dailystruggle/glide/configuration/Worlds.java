@@ -6,16 +6,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
-import java.util.logging.Level;
 
 public class Worlds {
     private final Glide plugin;
@@ -44,8 +42,8 @@ public class Worlds {
 
     public void update() {
         ArrayList<String> linesInWorlds = new ArrayList<>();
-        int defaultRelative = config.getConfigurationSection("default").getInt("relative",75);
-        int defaultMax = config.getConfigurationSection("default").getInt("max",320);
+        int defaultRelative = Objects.requireNonNull(config.getConfigurationSection("default")).getInt("relative",75);
+        int defaultMax = Objects.requireNonNull(config.getConfigurationSection("default")).getInt("max",320);
 
         try {
             Scanner scanner = new Scanner(
@@ -72,9 +70,9 @@ public class Worlds {
                 }
                 else { //if not a blank line
                     if(s.startsWith("    relative:"))
-                        s = "    relative: " + config.getConfigurationSection(currWorldName).getInt("relative", defaultRelative);
+                        s = "    relative: " + Objects.requireNonNull(config.getConfigurationSection(currWorldName)).getInt("relative", defaultRelative);
                     else if(s.startsWith("    max:"))
-                        s = "    max: " + config.getConfigurationSection(currWorldName).getInt("max", defaultMax);
+                        s = "    max: " + Objects.requireNonNull(config.getConfigurationSection(currWorldName)).getInt("max", defaultMax);
                     else if(!s.startsWith("#") && !s.startsWith("  ") && !s.startsWith("version") && (s.matches(".*[a-z].*") || s.matches(".*[A-Z].*")))
                     {
                         currWorldName = s.replace(":","");
@@ -90,7 +88,7 @@ public class Worlds {
         }
 
         FileWriter fw;
-        String[] linesArray = linesInWorlds.toArray(new String[linesInWorlds.size()]);
+        String[] linesArray = linesInWorlds.toArray(new String[0]);
         try {
             fw = new FileWriter(plugin.getDataFolder().getAbsolutePath() + File.separator + "worlds.yml");
             for (String s : linesArray) {
@@ -106,7 +104,7 @@ public class Worlds {
     }
 
     public Object getWorldSetting(String worldName, String name, Object def) {
-        if(!config.contains(worldName)) return def;
+        if(!checkWorldExists(worldName)) return def;
         return this.config.getConfigurationSection(worldName).get(name,def);
     }
 
