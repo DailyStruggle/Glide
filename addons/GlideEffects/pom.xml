@@ -77,7 +77,7 @@
             <artifactId>Glide</artifactId>
             <version>1.0.5</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../target/glide-1.0.5.jar</systemPath>
+            <systemPath>${project.basedir}/../../target/glide-1.0.5.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
