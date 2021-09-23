@@ -14,13 +14,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class SetupGlide extends BukkitRunnable {
-    private static Glide plugin = null;
     private final Player player;
     private final Configs configs;
-
-    public static void setPlugin(Glide plugin) {
-        SetupGlide.plugin = plugin;
-    }
 
     public SetupGlide(Player player, Configs configs) {
         this.player = player;

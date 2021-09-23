@@ -7,7 +7,6 @@ import io.github.dailystruggle.glide.Commands.TabComplete;
 import io.github.dailystruggle.glide.Listeners.OnFall;
 import io.github.dailystruggle.glide.Listeners.OnFireworkUse;
 import io.github.dailystruggle.glide.Listeners.OnGlideToggle;
-import io.github.dailystruggle.glide.Tasks.SetupGlide;
 import io.github.dailystruggle.glide.configuration.Configs;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -46,8 +45,6 @@ public final class Glide extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnFall(),this);
         getServer().getPluginManager().registerEvents(new OnGlideToggle(),this);
         getServer().getPluginManager().registerEvents(new OnFireworkUse(),this);
-
-        SetupGlide.setPlugin(this);
     }
 
     @Override

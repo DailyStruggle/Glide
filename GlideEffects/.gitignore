@@ -112,4 +112,4 @@ buildNumber.properties
 # Common working directory
 run/
 
-!GlideEffects/target/GlideEffects-1.0-SNAPSHOT.jar
+!target/GlideEffects-1.0-SNAPSHOT.jar
