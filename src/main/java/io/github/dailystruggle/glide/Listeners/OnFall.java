@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Set;
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class OnFall implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onFall(PlayerMoveEvent event) {
         Player player = event.getPlayer();
+        if(player.hasPotionEffect(PotionEffectType.SLOW_FALLING)) return; //because of glitchy appearance with other plugins
         Location to = event.getTo();
         if(to == null) return;
         if(player.isFlying() || player.isGliding() || player.isOnGround() || player.isSwimming()
