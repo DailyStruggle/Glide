@@ -31,12 +31,22 @@ public class OnFall implements Listener {
         to = to.clone();
         to.subtract(event.getFrom());
         if(to.getY()>0D) {
-            playerFallDistance.computeIfPresent(playerId,(uuid, aLong) -> aLong=0D);
+            try {
+                playerFallDistance.computeIfPresent(playerId,(uuid, aLong) -> aLong=0D);
+            }
+            catch (NullPointerException e) {
+                return;
+            }
             return;
         }
 
         if(to.getY()<0) {
-            playerFallDistance.putIfAbsent(playerId,0D);
+            try {
+                playerFallDistance.putIfAbsent(playerId,0D);
+            }
+            catch (NullPointerException e) {
+                return;
+            }
             Location finalDiff = to;
             playerFallDistance.compute(playerId,(uuid, aDouble) -> aDouble-= finalDiff.getY());
         }
@@ -75,7 +85,15 @@ public class OnFall implements Listener {
             }
         }
 
-        if(playerFallDistance.get(playerId) > fallDistance) {
+        boolean farEnough;
+        try {
+            farEnough = playerFallDistance.get(playerId) > fallDistance;
+        }
+        catch (NullPointerException e) {
+            return;
+        }
+
+        if(farEnough) {
             Glide.getGlidingPlayers().add(playerId);
             player.setGliding(true);
             Bukkit.getPluginManager().callEvent(new PlayerGlideEvent(player));
