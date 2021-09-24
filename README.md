@@ -1,2 +1,2 @@
 # Glide
-make a player glide until landing
+make a player glide until landing, with events
