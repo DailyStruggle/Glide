@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
@@ -24,9 +25,10 @@ public class OnFall implements Listener {
         if(to == null) return;
         if(player.isFlying() || player.isGliding() || player.isOnGround() || player.isSwimming()
                 || !to.getBlock().isEmpty() || !player.hasPermission("glide.fall")) {
-            Glide.getPlayerFallDistances().put(player.getUniqueId(),0D);
+            playerFallDistances.put(player.getUniqueId(),0D);
             return;
         }
+
         UUID playerId = player.getUniqueId();
         if(System.currentTimeMillis()- Glide.getLastLandTime(playerId) < 500) return;
         to = to.clone();
