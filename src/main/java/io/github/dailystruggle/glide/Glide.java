@@ -1,9 +1,6 @@
 package io.github.dailystruggle.glide;
 
-import io.github.dailystruggle.glide.Commands.GlideCmd;
-import io.github.dailystruggle.glide.Commands.Help;
-import io.github.dailystruggle.glide.Commands.Reload;
-import io.github.dailystruggle.glide.Commands.TabComplete;
+import io.github.dailystruggle.glide.Commands.*;
 import io.github.dailystruggle.glide.Listeners.OnFall;
 import io.github.dailystruggle.glide.Listeners.OnFireworkUse;
 import io.github.dailystruggle.glide.Listeners.OnGlideToggle;
@@ -13,12 +10,18 @@ import io.github.dailystruggle.glide.customEventListeners.OnPlayerGlide;
 import io.github.dailystruggle.glide.customEventListeners.OnPlayerLand;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Instrument;
 import org.bukkit.Particle;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -33,6 +36,8 @@ public final class Glide extends JavaPlugin {
     private static final ConcurrentHashMap<UUID,Double> playerFallDistances = new ConcurrentHashMap<>();
     private static Configs configs;
 
+    private static SubCommand subCommands = new SubCommand("glide.use",null);
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -42,25 +47,9 @@ public final class Glide extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
 
         // Plugin startup logic
-        GlideCmd glide = new GlideCmd(this, configs);
-        Objects.requireNonNull(getCommand("glide")).setExecutor(glide);
-        Objects.requireNonNull(getCommand("glide")).setTabCompleter(new TabComplete());
-
-        glide.addCommandHandle("reload","glide.reload",new Reload(configs));
-        glide.addCommandHandle("help","glide.use",new Help(configs));
-
-        //adding every sound takes too long at startup
-        Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.sound"));
-
-        for(Particle particle : Particle.values()) {
-            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.particle." + particle.name()));
-            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.land.particle." + particle.name()));
-        }
-
-        for(PotionEffectType effect : PotionEffectType.values()) {
-            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.potion." + effect.getName()));
-            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.land.potion." + effect.getName()));
-        }
+        initDefaultCommands();
+        Objects.requireNonNull(getCommand("glide")).setExecutor(new GlideCmd(subCommands));
+        Objects.requireNonNull(getCommand("glide")).setTabCompleter(new TabComplete(subCommands));
 
         getServer().getPluginManager().registerEvents(new OnFall(),this);
         getServer().getPluginManager().registerEvents(new OnGlideToggle(),this);
@@ -85,6 +74,10 @@ public final class Glide extends JavaPlugin {
 
     public static Glide getPlugin() {
         return plugin;
+    }
+
+    public static Configs getConfigs() {
+        return configs;
     }
 
     public static ConcurrentSkipListSet<UUID> getGlidingPlayers() {
@@ -113,5 +106,47 @@ public final class Glide extends JavaPlugin {
 
     public static ConcurrentHashMap<UUID,Double> getPlayerFallDistances() {
         return playerFallDistances;
+    }
+
+    private static void initDefaultCommands() {
+        subCommands.setSubCommand("help", new SubCommand("glide.use",new Help()));
+        subCommands.setSubCommand("reload", new SubCommand("glide.reload",new Reload()));
+
+        //adding every sound takes too long at startup
+        Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.sound"));
+        Bukkit.getPluginManager().addPermission(new Permission("glide.effect.gliding.sound"));
+        Bukkit.getPluginManager().addPermission(new Permission("glide.effect.land.sound"));
+
+        for(Particle particle : Particle.values()) {
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.particle." + particle.name()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.gliding.particle." + particle.name()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.land.particle." + particle.name()));
+        }
+
+        for(PotionEffectType effect : PotionEffectType.values()) {
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.potion." + effect.getName()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.gliding.potion." + effect.getName()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.land.potion." + effect.getName()));
+        }
+
+        for(FireworkEffect.Type type : FireworkEffect.Type.values()) {
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.firework." + type.name()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.gliding.firework." + type.name()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.land.firework." + type.name()));
+        }
+
+        for(Instrument instrument : Instrument.values()) {
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.note." + instrument.name()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.gliding.note." + instrument.name()));
+            Bukkit.getPluginManager().addPermission(new Permission("glide.effect.land.note." + instrument.name()));
+        }
+    }
+
+    public static void setSubCommand(@NotNull String name, @NotNull SubCommand subCommand) {
+        subCommands.setSubCommand(name,subCommand);
+    }
+
+    public static void setSubCommand(@NotNull String name, @NotNull String permission, @NotNull CommandExecutor commandExecutor) {
+        setSubCommand(name,new SubCommand(permission,commandExecutor));
     }
 }

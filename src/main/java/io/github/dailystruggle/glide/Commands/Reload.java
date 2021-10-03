@@ -1,5 +1,6 @@
 package io.github.dailystruggle.glide.Commands;
 
+import io.github.dailystruggle.glide.Glide;
 import io.github.dailystruggle.glide.SendMessage;
 import io.github.dailystruggle.glide.configuration.Configs;
 import org.bukkit.command.Command;
@@ -9,8 +10,8 @@ import org.bukkit.command.CommandSender;
 public class Reload implements CommandExecutor {
     private final Configs configs;
 
-    public Reload(Configs configs) {
-        this.configs = configs;
+    public Reload() {
+        this.configs = Glide.getConfigs();
     }
 
     @Override

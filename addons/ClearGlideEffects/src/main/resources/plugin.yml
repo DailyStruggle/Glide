@@ -1,0 +1,13 @@
+name: ClearGlideEffects
+version: '${project.version}'
+main: io.github.dailystruggle.clearglideeffects.ClearGlideEffects
+api-version: 1.13
+authors: [ leaf26 ]
+description: example command to clear glide effects
+
+depend: [ Glide, Vault ]
+
+permissions:
+  glide.clearEffects:
+    description: clear glide effects for player
+    default: op

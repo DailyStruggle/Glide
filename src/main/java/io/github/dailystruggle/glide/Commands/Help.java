@@ -1,5 +1,6 @@
 package io.github.dailystruggle.glide.Commands;
 
+import io.github.dailystruggle.glide.Glide;
 import io.github.dailystruggle.glide.SendMessage;
 import io.github.dailystruggle.glide.configuration.Configs;
 import org.bukkit.command.Command;
@@ -13,8 +14,8 @@ public class Help implements CommandExecutor {
     private final Configs configs;
     private final Map<String,String> perms = new HashMap<String,String>();
 
-    public Help(Configs configs) {
-        this.configs = configs;
+    public Help() {
+        this.configs = Glide.getConfigs();
         this.perms.put("glide","glide.use");
         this.perms.put("help","glide.use");
         this.perms.put("reload","glide.reload");

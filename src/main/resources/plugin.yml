@@ -7,7 +7,6 @@ description: make a player glide until landing
 
 softdepend: [ PlaceholderAPI ]
 
-
 commands:
   glide:
     description: teleport upward and glide until you hit the ground
