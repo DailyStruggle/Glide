@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -16,36 +17,26 @@ public class GlideCmd implements CommandExecutor {
     private final Glide plugin;
     private final Configs configs;
 
-    private final Map<String, SubCommand> glideCommands;
-    private final Map<String,String> glideParams = new HashMap<>();
+    private final SubCommand glideCommands;
 
     public GlideCmd(SubCommand command) {
         this.plugin = Glide.getPlugin();
         this.configs = Glide.getConfigs();
 
-        for(Map.Entry<String, ArrayList<String>> entry : Objects.requireNonNull(command.getSubParams())) {
-            for(String param : entry.getValue()) {
-                glideParams.put(param,entry.getKey());
-            }
-        }
-        glideCommands = command.getSubCommands();
-    }
-
-    public void setSubCommand(String name, SubCommand subCommand) {
-        glideCommands.put(name,subCommand);
+        glideCommands = command;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if(!command.getName().equals("glide")) return true;
 
-        if(args.length > 0 && glideCommands.containsKey(args[0])) {
-            if(!sender.hasPermission(glideCommands.get(args[0]).getPerm())) {
+        if(args.length > 0 && glideCommands.getSubCommands().containsKey(args[0])) {
+            if(!sender.hasPermission(glideCommands.getSubCommands().get(args[0]).getPerm())) {
                 String msg = configs.lang.getLog("noPerms");
                 SendMessage.sendMessage(sender,msg);
             }
             else {
-                return Objects.requireNonNull(glideCommands.get(args[0]).getCommandExecutor())
+                return Objects.requireNonNull(glideCommands.getSubCommands().get(args[0]).getCommandExecutor())
                         .onCommand(sender,command,label,Arrays.copyOfRange(args, 1, args.length));
             }
             return true;
@@ -57,11 +48,12 @@ public class GlideCmd implements CommandExecutor {
         }
 
         Map<String,String> glideArgs = new HashMap<>();
-        for(int i = 0; i < args.length; i++) {
-            int idx = args[i].indexOf(':');
-            String arg = idx>0 ? args[i].substring(0,idx) : args[i];
-            if(this.glideParams.containsKey(arg) && sender.hasPermission(glideParams.get(arg)) && idx < args[i].length()-1) {
-                glideArgs.putIfAbsent(arg,args[i].substring(idx+1)); //only use first instance
+        for (String s : args) {
+            int idx = s.indexOf(':');
+            String arg = idx > 0 ? s.substring(0, idx) : s;
+            Map<String,String> subParams = glideCommands.getAllSubParams();
+            if (subParams.containsKey(arg) && sender.hasPermission(subParams.get(arg)) && idx < s.length() - 1) {
+                glideArgs.putIfAbsent(arg, s.substring(idx + 1)); //only use first instance
             }
         }
 
@@ -80,7 +72,7 @@ public class GlideCmd implements CommandExecutor {
             return true;
         }
 
-        new SetupGlide(player, configs).runTask(plugin);
+        new SetupGlide(player.getUniqueId(), configs).runTask(plugin);
 
         return true;
     }

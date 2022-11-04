@@ -53,7 +53,7 @@ public class SubCommand {
         return commands.get(name);
     }
 
-    public @Nullable Map<String, SubCommand> getSubCommands() {
+    public @NotNull Map<String, SubCommand> getSubCommands() {
         return commands;
     }
 
@@ -75,12 +75,11 @@ public class SubCommand {
         return subParamTypes.get(name);
     }
 
-    @Nullable
-    public List<String> getSubParams(@NotNull String perm) {
-        return subParamsPermList.get(perm);
-    }
-
     public @Nullable Set<Map.Entry<String, ArrayList<String>>> getSubParams() {
         return subParamsPermList.entrySet();
+    }
+
+    public @NotNull Map<String, String> getAllSubParams() {
+        return subParams;
     }
 }

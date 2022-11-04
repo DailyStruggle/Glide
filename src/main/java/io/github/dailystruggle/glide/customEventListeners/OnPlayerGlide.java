@@ -46,15 +46,11 @@ public class OnPlayerGlide implements Listener {
 
 
         if(player.hasPermission("glide.invulnerable") && !player.isInvulnerable()) {
-            player.setInvulnerable(true);
-            Glide.getInvulnerablePlayers().add(playerId);
             if(invulnerabilityTime>0) {
+                Glide.getInvulnerablePlayers().add(playerId);
                 Bukkit.getScheduler().runTaskLater(Glide.getPlugin(),()->{
                     ConcurrentSkipListSet<UUID> invulnerablePlayers = Glide.getInvulnerablePlayers();
-                    if(invulnerablePlayers.contains(playerId)) {
-                        player.setInvulnerable(false);
-                        invulnerablePlayers.remove(playerId);
-                    }
+                    invulnerablePlayers.remove(playerId);
                 }, 20L * invulnerabilityTime);
             }
         }

@@ -1,9 +1,7 @@
 package io.github.dailystruggle.glide;
 
 import io.github.dailystruggle.glide.Commands.*;
-import io.github.dailystruggle.glide.Listeners.OnFall;
-import io.github.dailystruggle.glide.Listeners.OnFireworkUse;
-import io.github.dailystruggle.glide.Listeners.OnGlideToggle;
+import io.github.dailystruggle.glide.Listeners.*;
 import io.github.dailystruggle.glide.configuration.Configs;
 import io.github.dailystruggle.glide.customEventListeners.GlideEffects;
 import io.github.dailystruggle.glide.customEventListeners.OnPlayerGlide;
@@ -36,7 +34,7 @@ public final class Glide extends JavaPlugin {
     private static final ConcurrentHashMap<UUID,Double> playerFallDistances = new ConcurrentHashMap<>();
     private static Configs configs;
 
-    private static SubCommand subCommands = new SubCommand("glide.use",null);
+    private static final SubCommand subCommands = new SubCommand("glide.use",null);
 
     @Override
     public void onEnable() {
@@ -51,6 +49,7 @@ public final class Glide extends JavaPlugin {
         Objects.requireNonNull(getCommand("glide")).setExecutor(new GlideCmd(subCommands));
         Objects.requireNonNull(getCommand("glide")).setTabCompleter(new TabComplete(subCommands));
 
+        getServer().getPluginManager().registerEvents(new OnDamage(),this);
         getServer().getPluginManager().registerEvents(new OnFall(),this);
         getServer().getPluginManager().registerEvents(new OnGlideToggle(),this);
         getServer().getPluginManager().registerEvents(new OnFireworkUse(),this);
@@ -63,13 +62,8 @@ public final class Glide extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         glidingPlayers.clear();
+        invulnerablePlayers.clear();
         configs = null;
-
-        for(UUID uuid : invulnerablePlayers) {
-            Player player = Bukkit.getOfflinePlayer(uuid).getPlayer();
-            if(player == null) continue;
-            player.setInvulnerable(false);
-        }
     }
 
     public static Glide getPlugin() {
@@ -111,6 +105,8 @@ public final class Glide extends JavaPlugin {
     private static void initDefaultCommands() {
         subCommands.setSubCommand("help", new SubCommand("glide.use",new Help()));
         subCommands.setSubCommand("reload", new SubCommand("glide.reload",new Reload()));
+
+        subCommands.setSubParam("player", "glide.use.other", SubCommand.ParamType.PLAYER);
 
         //adding every sound takes too long at startup
         Bukkit.getPluginManager().addPermission(new Permission("glide.effect.glide.sound"));

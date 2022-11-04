@@ -18,7 +18,6 @@ public class OnPlayerLand implements Listener {
         Glide.getGlidingPlayers().remove(playerID);
         if(Glide.getInvulnerablePlayers().contains(playerID)) {
             Bukkit.getScheduler().runTaskLater(Glide.getPlugin(),()->{
-                player.setInvulnerable(false);
                 Glide.getInvulnerablePlayers().remove(playerID);
             },10);
         }

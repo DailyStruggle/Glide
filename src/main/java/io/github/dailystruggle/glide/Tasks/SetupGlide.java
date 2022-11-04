@@ -7,17 +7,21 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.UUID;
+
 public class SetupGlide extends BukkitRunnable {
-    private final Player player;
+    private final UUID playerId;
     private final Configs configs;
 
-    public SetupGlide(Player player, Configs configs) {
-        this.player = player;
+    public SetupGlide(UUID playerId, Configs configs) {
+        this.playerId = playerId;
         this.configs = configs;
     }
 
     @Override
     public void run() {
+        Player player = Bukkit.getPlayer(playerId);
+        if(player == null) return;
         Location location = player.getLocation();
         int relative = (int) configs.worlds.getWorldSetting(player.getWorld().getName(),"relative",75);
         int max = (int) configs.worlds.getWorldSetting(player.getWorld().getName(),"max",320);

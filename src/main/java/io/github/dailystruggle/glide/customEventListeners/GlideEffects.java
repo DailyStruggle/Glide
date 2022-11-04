@@ -321,12 +321,12 @@ public class GlideEffects implements Listener {
                         fwm.setPower((int)firework[2]);
                         f.setFireworkMeta(fwm);
                         if(fwm.getPower() == 0) {
-                            if (player.isInvulnerable()) {
+                            if (Glide.getInvulnerablePlayers().contains(player.getUniqueId())) {
                                 f.detonate();
                             } else {
-                                player.setInvulnerable(true);
+                                Glide.getInvulnerablePlayers().add(player.getUniqueId());
                                 f.detonate();
-                                Bukkit.getScheduler().runTaskLater(Glide.getPlugin(), () -> player.setInvulnerable(false), 1);
+                                Bukkit.getScheduler().runTaskLater(Glide.getPlugin(), () -> Glide.getInvulnerablePlayers().remove(player.getUniqueId()), 1);
                             }
                         }
                     }

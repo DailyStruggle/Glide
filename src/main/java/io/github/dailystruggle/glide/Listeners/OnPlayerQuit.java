@@ -13,12 +13,7 @@ public class OnPlayerQuit implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        ConcurrentSkipListSet<UUID> invulnerablePlayers = Glide.getInvulnerablePlayers();
-        if(invulnerablePlayers.contains(uuid)) {
-            event.getPlayer().setInvulnerable(false);
-            invulnerablePlayers.remove(uuid);
-        }
-
+        Glide.getInvulnerablePlayers().remove(uuid);
         Glide.getGlidingPlayers().remove(uuid);
     }
 }
