@@ -74,14 +74,8 @@ public class OnFall implements Listener {
             }
         }
 
-        boolean farEnough;
-        try {
-            farEnough = playerFallDistances.get(playerId) > fallDistance;
-        }
-        catch (NullPointerException e) {
-            farEnough = false;
-        }
-        if(farEnough) {
+        Double aDouble = playerFallDistances.get(playerId);
+        if(aDouble != null && aDouble > fallDistance) {
             Bukkit.getPluginManager().callEvent(new PlayerGlideEvent(player));
         }
     }
